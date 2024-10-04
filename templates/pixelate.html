@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Pixelation Tool | LA LAB</title>
+    <meta name="description" content="Transform your images with our free online Image Pixelation Tool. Create unique pixelated effects easily and download your artwork instantly.">
+    <meta name="keywords" content="image pixelation, pixel art, image editor, online tool, LA LAB">
+    <meta name="author" content="LA LAB">
+    <link rel="canonical" href="https://your-domain.com/pixelate">
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/pixelate">
+    <meta property="og:title" content="Image Pixelation Tool | LA LAB">
+    <meta property="og:description" content="Transform your images with our free online Image Pixelation Tool. Create unique pixelated effects easily and download your artwork instantly.">
+    <meta property="og:image" content="https://your-domain.com/path-to-image-preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://your-domain.com/pixelate">
+    <meta property="twitter:title" content="Image Pixelation Tool | LA LAB">
+    <meta property="twitter:description" content="Transform your images with our free online Image Pixelation Tool. Create unique pixelated effects easily and download your artwork instantly.">
+    <meta property="twitter:image" content="https://your-domain.com/path-to-image-preview.jpg">
+<style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            position: relative;
+            height: 30px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav ul li a:hover {
+            color: #f9d342;
+        }
+
+        /* Mobile Menu Toggle */
+        .burger {
+            display: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        /* Mobile Navigation Menu */
+        .nav-links-mobile {
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            z-index: 9;
+        }
+
+        .nav-links-mobile li {
+            padding: 15px 0;
+        }
+
+        .nav-links-mobile.show {
+            display: flex;
+        }
+
+        /* Modern Download Button Styling */
+        .download-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: #333;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            nav ul li {
+                display: block;
+                margin: 10px 0;
+            }
+
+            .burger {
+                display: block;
+                position: absolute;
+                top: 10px;
+                right: 20px;
+            }
+        }
+
+        /* Content Styling */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Form styling */
+        form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"] {
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Image Display Styling */
+        .image-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #f9d342;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <h1>Image Pixelation Tool</h1>
+            <p>Transform your images into unique pixel art with our easy-to-use pixelation tool. Upload an image, choose your pixel size, and create stunning pixelated effects in seconds!</p>
+           <form id="pixelateForm" enctype="multipart/form-data">
+                <input type="file" name="image" accept="image/*" required>
+                <label for="pixel_size">Pixel Size:</label>
+                <input type="number" name="pixel_size" id="pixel_size" min="1" max="50" value="10">
+                <button type="submit">Pixelate</button>
+            </form>
+            <div id="result" class="image-container"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by <a href="#">LA LAB</a> | &copy; 2024 All Rights Reserved</p>
+    </footer>
+
+    <script>
+        document.getElementById('pixelateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            
+            // Clear previous results
+            document.getElementById('result').innerHTML = '<p>Processing...</p>';
+            
+            fetch('/pixelate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('result').innerHTML = `
+                        <h2>Pixelated Image:</h2>
+                        <img src="${data.pixelated_image_url}?t=${new Date().getTime()}" alt="Pixelated Image">
+                        <a href="${data.pixelated_image_url}" download class="download-button">Download Pixelated Image</a>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>Error: ${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<p>An error occurred. Please try again.</p>';
+            });
+            
+            // Reset the form to clear the file input
+            this.reset();
+        });
+    
+        const burger = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+    
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!navLinks.contains(event.target) && !burger.contains(event.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Face Recognition Tool",
+          "url": "https://your-domain.com/face-recognition",
+          "description": "Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results with our advanced AI technology.",
+          "applicationCategory": "Image Processing",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          }
+        }
+        </script>
+</body>
+</html>

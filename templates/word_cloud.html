@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Cloud Generator | Create Custom Word Clouds Online</title>
+    <meta name="description" content="Generate unique word clouds online with our free Word Cloud Generator. Visualize text data, create custom designs, and download high-quality images instantly.">
+    <meta name="keywords" content="word cloud generator, text visualization, custom word clouds, online tool, free word cloud maker">
+    <meta name="author" content="LA LAB">
+    <link rel="canonical" href="https://your-domain.com/face-recognition">
+ <!-- Favicon -->
+ <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+ <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+     <!-- Open Graph tags for social media sharing -->
+     <meta property="og:title" content="Word Cloud Generator | Create Custom Word Clouds Online">
+     <meta property="og:description" content="Generate unique word clouds online with our free Word Cloud Generator. Visualize text data and create custom designs easily.">
+     <meta property="og:image" content="https://yourdomain.com/path/to/word-cloud-preview.jpg">
+     <meta property="og:url" content="https://yourdomain.com/word-cloud">
+     <meta property="og:type" content="website">
+ 
+     <!-- Twitter Card tags -->
+     <meta name="twitter:card" content="summary_large_image">
+     <meta name="twitter:title" content="Word Cloud Generator | Create Custom Word Clouds Online">
+     <meta name="twitter:description" content="Generate unique word clouds online with our free Word Cloud Generator. Visualize text data and create custom designs easily.">
+     <meta name="twitter:image" content="https://yourdomain.com/path/to/word-cloud-preview.jpg">
+ 
+        <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+            font-size: 2.5em;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 30px;
+            z-index: 10;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #f9d342;
+        }
+
+        /* Burger Menu */
+        .burger {
+            display: none;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+        }
+
+        /* Mobile Navigation Menu */
+        .nav-links-mobile {
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            z-index: 9;
+        }
+
+        .nav-links-mobile li {
+            padding: 15px 0;
+        }
+
+        .nav-links-mobile.show {
+            display: flex;
+        }
+
+        /* Content Styling */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Form styling */
+        form {
+            margin: 20px 0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Image Display Styling */
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+            color: white;
+        }
+
+        footer a {
+            color: #f9d342;
+            text-decoration: none;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            nav ul.nav-links {
+                display: none;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .nav-links-mobile {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+
+        /* Ensure mobile menu takes full width */
+        .nav-links-mobile {
+            width: 100%;
+            left: 0;
+            right: auto;
+        }
+         /* Modern Download Button Styling */
+    .download-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .download-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+
+    <script>
+        // Toggle for hamburger menu
+        function toggleMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.toggle('show');
+        }
+
+        // Close menu when clicking outside the menu
+        document.addEventListener('click', function (event) {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            const burger = document.querySelector('.burger');
+
+            if (!burger.contains(event.target) && !navLinksMobile.contains(event.target)) {
+                navLinksMobile.classList.remove('show');
+            }
+        });
+
+        // New function to close mobile menu
+        function closeMobileMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.remove('show');
+        }
+
+        // Add resize event listener
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="burger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+        <!-- Mobile Navigation (Hidden by default) -->
+        <ul class="nav-links-mobile">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <h1>Word Cloud Generator</h1>
+
+            <!-- Form -->
+            <form action="/word-cloud" method="POST">
+                <label for="text">Enter text:</label>
+                <textarea name="text" rows="5" cols="50" required></textarea>
+                <button type="submit">Generate Word Cloud</button>
+            </form>
+
+            <!-- Word Cloud Image -->
+            {% if wordcloud_image_url %}
+                <h2>Generated Word Cloud:</h2>
+                <img src="{{ wordcloud_image_url }}" alt="Word Cloud">
+                <a href="{{ wordcloud_image_url }}" download class="download-button">Download Word Cloud</a>
+            {% endif %}
+            <section>
+                <h2>How to Use Our Word Cloud Generator</h2>
+                <ol>
+                    <li>Enter or paste your text into the input box above.</li>
+                    <li>Click the "Generate Word Cloud" button.</li>
+                    <li>View your custom word cloud image.</li>
+                    <li>Download the image for free use.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Benefits of Using Word Clouds</h2>
+                <ul>
+                    <li>Quickly visualize key themes in large text datasets</li>
+                    <li>Create engaging visual content for presentations or social media</li>
+                    <li>Analyze frequency of words in speeches, articles, or surveys</li>
+                    <li>Generate unique art pieces from favorite quotes or poems</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by <a href="#">LA LAB</a> | &copy; 2024 All Rights Reserved</p>
+    </footer>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Face Recognition Tool",
+          "url": "https://your-domain.com/face-recognition",
+          "description": "Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results with our advanced AI technology.",
+          "applicationCategory": "Image Processing",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          }
+        }
+        </script>
+</body>
+</html>

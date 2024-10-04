@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Image Editor - Free Photo Editing Tools | LA LAB</title>
+    <meta name="description" content="Edit your photos online with our free image editor. Apply effects like grayscale, blur, rotate, and more. Easy to use, no registration required.">
+    <meta name="keywords" content="image editor, photo editing, online editor, free image tools">
+    <meta name="author" content="LA LAB">
+ <!-- Favicon -->
+ <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+ <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/image-editor">
+    <meta property="og:title" content="Free Online Image Editor | LA LAB">
+    <meta property="og:description" content="Edit your photos with our free online image editor. Apply various effects and download your edited images instantly.">
+    <meta property="og:image" content="https://yourwebsite.com/path-to-image-editor-preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourwebsite.com/image-editor">
+    <meta property="twitter:title" content="Free Online Image Editor | LA LAB">
+    <meta property="twitter:description" content="Edit your photos with our free online image editor. Apply various effects and download your edited images instantly.">
+    <meta property="twitter:image" content="https://yourwebsite.com/path-to-image-editor-preview.jpg">
+
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 30px;
+            z-index: 10;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #f9d342;
+        }
+
+        /* Burger Menu */
+        .burger {
+            display: none;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+        }
+
+        /* Mobile Navigation Menu */
+        .nav-links-mobile {
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            z-index: 9;
+        }
+
+        .nav-links-mobile li {
+            padding: 15px 0;
+        }
+
+        .nav-links-mobile.show {
+            display: flex;
+        }
+
+        /* Content Styling */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        select,
+        input[type="file"],
+        button {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .image-box {
+            width: 45%;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        img {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .download-link {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .effects-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .effects-buttons button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #f9d342;
+            text-decoration: none;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            nav ul.nav-links {
+                display: none;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .nav-links-mobile {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .image-container {
+                flex-direction: column;
+            }
+
+            .image-box {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+                /* Modern Download Button Styling */
+    .download-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .download-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="burger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+        <!-- Mobile Navigation (Hidden by default) -->
+        <ul class="nav-links-mobile">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <h1>Free Online Image Editor</h1>
+            <p>Upload your image and apply various effects to enhance your photos. No registration required!</p>
+
+            <section class="why-use-our-tool">
+                <h2>Why Choose Our Image Editor?</h2>
+                <p>Our free online image editor offers a powerful yet user-friendly solution for all your photo editing needs. With a wide range of effects including grayscale, blur, rotate, and edge detection, you can transform your images in seconds. Unlike other tools, we prioritize your privacy by processing all edits directly in your browser - no uploads to external servers required. Whether you're a professional photographer or just looking to enhance your social media posts, our tool provides quick, high-quality results without the need for complex software or subscriptions. Try it now and see the difference!</p>
+            </section>
+            <!-- Form to upload image -->
+            <form id="image-form" enctype="multipart/form-data">
+                <label for="image">Upload an image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <div id="error-message" class="error-message">Unsupported file type. Please upload a JPEG, PNG, WebP, or BMP image.</div>
+            </form>
+
+            <!-- Buttons for selecting effects -->
+            <div class="effects-buttons">
+                <h2>Available Effects:</h2>
+                <button data-effect="grayscale">Grayscale</button>
+                <button data-effect="blur">Blur</button>
+                <button data-effect="rotate">Rotate</button>
+                <button data-effect="flip_h">Flip Horizontally</button>
+                <button data-effect="flip_v">Flip Vertically</button>
+                <button data-effect="edges">Edge Detection</button>
+                <button data-effect="sharpen">Sharpen</button>
+                <button data-effect="sepia">Sepia</button>
+            </div>
+
+            <!-- Display the original and edited image -->
+            <div class="image-container">
+                <div class="image-box">
+                    <h2>Original Image:</h2>
+                    <img id="original-image" src="" alt="Original Image" style="display:none;">
+                </div>
+                <div class="image-box">
+                    <h2>Edited Image:</h2>
+                    <img id="edited-image" src="" alt="Edited Image" style="display:none;">
+                    <a id="download-link" class="download-button" href="#" download style="display:none;">Download Edited Image</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by <a href="#">LA LAB</a> | &copy; 2024 All Rights Reserved</p>
+    </footer>
+
+    <script>
+        const imageForm = document.getElementById('image-form');
+        const originalImage = document.getElementById('original-image');
+        const editedImage = document.getElementById('edited-image');
+        const downloadLink = document.getElementById('download-link');
+        const errorMessage = document.getElementById('error-message');
+
+        let uploadedImageFile;
+
+        // Define accepted file types (exclude GIF)
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/tiff'];
+
+        // Event listener to preview the uploaded image
+        document.getElementById('image').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            errorMessage.style.display = 'none'; // Hide error message
+
+            if (file) {
+                // Check if the file type is accepted
+                if (!acceptedFileTypes.includes(file.type)) {
+                    errorMessage.style.display = 'block'; // Show error message
+                    this.value = ''; // Reset file input
+                    originalImage.style.display = 'none'; // Hide original image
+                    editedImage.style.display = 'none'; // Hide edited image
+                    downloadLink.style.display = 'none'; // Hide download link
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadedImageFile = file; // Store uploaded image
+                    originalImage.src = e.target.result; // Show original image
+                    originalImage.style.display = 'block'; // Display original image
+                    editedImage.style.display = 'none'; // Hide edited image until an effect is applied
+                    downloadLink.style.display = 'none'; // Hide download link initially
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Event listener for effect buttons
+        document.querySelectorAll('.effects-buttons button').forEach(button => {
+            button.addEventListener('click', function () {
+                const effect = this.getAttribute('data-effect');
+                if (uploadedImageFile) {
+                    applyEffect(effect); // Apply selected effect
+                } else {
+                    alert('Please upload an image first.');
+                }
+            });
+        });
+
+        // Function to send image and effect data via AJAX
+        function applyEffect(effect) {
+            const formData = new FormData();
+            formData.append('image', uploadedImageFile); // Send the original image each time
+            formData.append('effect', effect); // Send the selected effect
+
+            // Generate a unique filename using the current timestamp
+            const timestamp = new Date().getTime();
+            const uniqueFileName = `edited_image_${timestamp}.jpg`; // Adjust extension if needed
+            formData.append('filename', uniqueFileName); // Send unique filename if needed on the server-side
+
+            fetch('/image-editor', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show edited image
+                    editedImage.src = `${data.edited_image_url}?t=${timestamp}`; // Append timestamp to URL for cache busting
+                    editedImage.style.display = 'block'; // Display edited image
+
+                    // Enable download link
+                    downloadLink.href = `${data.edited_image_url}?t=${timestamp}`; // Set download link URL
+                    downloadLink.style.display = 'block'; // Show download link
+                } else {
+                    alert('Error applying effect');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Toggle for hamburger menu
+        function toggleMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.toggle('show');
+        }
+
+        // Close menu when clicking outside the menu
+        document.addEventListener('click', function (event) {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            const burger = document.querySelector('.burger');
+
+            // Check if the click is outside the menu and burger icon
+            if (!burger.contains(event.target) && !navLinksMobile.contains(event.target)) {
+                navLinksMobile.classList.remove('show');
+            }
+        });
+
+        // New function to close mobile menu
+        function closeMobileMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.remove('show');
+        }
+
+        // Add resize event listener
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) { // 768px is the breakpoint in your CSS
+                closeMobileMenu();
+            }
+        });
+    </script>
+       <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "LA LAB Online Image Editor",
+          "url": "https://yourwebsite.com/image-editor",
+          "description": "Free online image editor with various effects and tools.",
+          "applicationCategory": "Photo",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          }
+        }
+        </script>
+</body>
+
+</html>

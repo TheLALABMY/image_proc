@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Style Transfer</title>
+</head>
+<body>
+    <h1>Art Style Transfer</h1>
+    <form action="/art-style-transfer" method="POST" enctype="multipart/form-data">
+        <label for="content_image">Upload Content Image:</label>
+        <input type="file" name="content_image" required>
+        <br>
+        <label for="style_image">Upload Style Image:</label>
+        <input type="file" name="style_image" required>
+        <br>
+        <button type="submit">Apply Style Transfer</button>
+    </form>
+
+    {% if styled_image_url %}
+        <h2>Styled Image:</h2>
+        <img src="{{ styled_image_url }}" alt="Styled Image" style="max-width: 300px;">
+        <a href="{{ styled_image_url }}" download>Download Styled Image</a>
+    {% endif %}
+</body>
+</html>

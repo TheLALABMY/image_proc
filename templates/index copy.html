@@ -1,0 +1,370 @@
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Image Processing App | Free Online Photo Editing Tools</title>
+        <meta name="description" content="Transform your images with our free online image processing tools. Create pencil sketches, word clouds, edit photos, detect faces, and pixelate images easily.">
+        <meta name="keywords" content="image processing, photo editing, pencil sketch, word cloud, face recognition, pixelate, online tools">
+        <meta name="author" content="LA LAB">
+    <link rel="canonical" href="https://your-domain.com/face-recognition">
+        <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+        <style>
+            /* Global Styling */
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f0f0f0;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                color: #333;
+            }
+
+            h1 {
+                text-align: center;
+                margin: 20px 0;
+                color: #333;
+                font-size: 2.5em;
+            }
+
+            p {
+                font-size: 1.2em;
+                color: #666;
+                margin: 15px 0;
+                text-align: center;
+            }
+
+            /* Navigation Bar */
+            nav {
+                background-color: #333;
+                padding: 10px 20px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                position: relative;
+                height: 30px; /* Set a fixed height for the nav */
+                z-index: 10;  /* Ensure nav is above other content */
+            }
+
+            /* Center menu in desktop view */
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center; /* Center horizontally */
+                align-items: center;      /* Align items vertically */
+            }
+
+            nav ul li {
+                margin: 0 20px;
+            }
+
+            nav ul li a {
+                color: white;
+                text-decoration: none;
+                font-size: 18px;
+                transition: color 0.3s ease;
+            }
+
+            nav ul li a:hover {
+                color: #f9d342;
+            }
+
+            /* Burger Menu */
+            .burger {
+                display: none;
+                cursor: pointer;
+                position: absolute;
+                right: 20px;
+                top: 15px;
+            }
+
+            .burger div {
+                width: 25px;
+                height: 3px;
+                background-color: white;
+                margin: 4px 0;
+            }
+
+            /* Mobile Navigation Menu */
+            .nav-links-mobile {
+                display: none; /* Hidden by default */
+                flex-direction: column;
+                background-color: #333;
+                position: absolute;
+                top: 60px; /* Adjust this to match the nav height */
+                right: 0;
+                width: 100%;
+                text-align: center;
+                margin: 0;  /* Remove margin to close the gap */
+                padding: 0; /* Remove padding if needed */
+                z-index: 9; /* Ensure it is below the nav */
+            }
+
+            .nav-links-mobile li {
+                padding: 15px 0;
+            }
+
+            .nav-links-mobile.show {
+                display: flex; /* Show on toggle */
+            }
+
+            /* Media Queries for Responsive Design */
+            @media (max-width: 768px) {
+                nav ul {
+                    display: none; /* Hide desktop menu in mobile view */
+                }
+
+                .burger {
+                    display: block; /* Show burger icon */
+                }
+
+                .nav-links-mobile {
+                    display: none; /* Hidden by default in mobile view */
+                }
+            }
+
+            /* Content Styling */
+            .container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .content {
+                background-color: white;
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+                width: 100%;
+                text-align: center;
+            }
+
+            /* 2x2 Grid for the tools */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tools-grid li {
+    list-style-type: none;
+    background-color: #f9d342;
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.tools-grid li:hover {
+    background-color: #333;
+    transform: translateY(-5px);
+}
+
+.tools-grid li a {
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.tools-grid li img {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.tools-grid li span {
+    flex-grow: 1;
+    text-align: right;
+}
+            /* Footer */
+            footer {
+                background-color: #333;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                position: relative;
+            }
+
+            footer p {
+                margin: 0;
+                font-size: 14px;
+                color: white;
+            }
+
+            footer a {
+                color: #f9d342;
+                text-decoration: none;
+            }
+
+            /* Updated Media Queries for Responsive Design */
+            @media (max-width: 768px) {
+                nav ul.nav-links {
+                    display: none; /* Hide desktop menu in mobile view */
+                }
+
+                .burger {
+                    display: block; /* Show burger icon */
+                }
+
+                .nav-links-mobile {
+                    display: none; /* Hidden by default in mobile view */
+                }
+
+                .tools-grid {
+                    grid-template-columns: 1fr; /* Change to single column for mobile */
+                    gap: 15px; /* Reduce gap for mobile */
+                }
+
+                .content {
+                    padding: 20px; /* Slightly reduce padding for smaller screens */
+                }
+
+                .tools-grid li img {
+                    width: 60px; /* Slightly reduce image size for mobile */
+                    height: 60px;
+                }
+            }
+
+            /* Ensure mobile menu takes full width */
+            .nav-links-mobile {
+                width: 100%;
+                left: 0;
+                right: auto;
+            }
+        </style>
+
+        <script>
+            // Toggle for hamburger menu
+            function toggleMenu() {
+                const navLinksMobile = document.querySelector('.nav-links-mobile');
+                navLinksMobile.classList.toggle('show');
+            }
+
+            // Close menu when clicking outside the menu
+            document.addEventListener('click', function (event) {
+                const navLinksMobile = document.querySelector('.nav-links-mobile');
+                const burger = document.querySelector('.burger');
+
+                // Check if the click is outside the menu and burger icon
+                if (!burger.contains(event.target) && !navLinksMobile.contains(event.target)) {
+                    navLinksMobile.classList.remove('show');
+                }
+            });
+
+            // New function to close mobile menu
+        function closeMobileMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.remove('show');
+        }
+
+        // Add resize event listener
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) { // 768px is the breakpoint in your CSS
+                closeMobileMenu();
+            }
+        });
+        </script>
+    </head>
+
+    <body>
+
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="burger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+                <li><a href="/word-cloud">Word Cloud</a></li>
+                <li><a href="/image-editor">Image Editor</a></li>
+                <li><a href="/face-recognition">Face Recognition</a></li>
+                <li><a href="/pixelate">Pixelate</a></li>
+            </ul>
+            <!-- Mobile Navigation (Hidden by default) -->
+            <ul class="nav-links-mobile">
+                <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+                <li><a href="/word-cloud">Word Cloud</a></li>
+                <li><a href="/image-editor">Image Editor</a></li>
+                <li><a href="/face-recognition">Face Recognition</a></li>
+                <li><a href="/pixelate">Pixelate</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="content">
+                <h1>Free Online Image Processing Tools</h1>
+            <p>Transform your photos with our powerful and easy-to-use image editing tools. Select one below to get started:</p>
+                <ul class="tools-grid">
+                    <li>
+                        <a href="/pencil-sketch">
+                            <img src="{{ url_for('static', filename='img/sketch.png') }}" alt="Pencil Sketch Generator"> Pencil Sketch 
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/word-cloud">
+                            <img src="{{ url_for('static', filename='img/wordcloud-icon.png') }}" alt="Word Cloud Icon"> Word Cloud Generator
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/image-editor">
+                            <img src="{{ url_for('static', filename='img/image-edit-icon.png') }}" alt="Image Editor Icon"> Image Editor
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/face-recognition">
+                            <img src="{{ url_for('static', filename='img/face-recognition-icon.png') }}" alt="Face Recognition Icon"> Face Recognition
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/pixelate">
+                            <img src="{{ url_for('static', filename='img/pixelate-icon.png') }}" alt="Pixelate Icon"> Pixelate
+                        </a>
+                    </li>
+                </ul>
+                <p>Why use our tools? They're free, fast, and require no sign-up. Whether you're a professional or just having fun, our user-friendly interface makes image processing a breeze. Try them now and unleash your creativity!</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Created by <a href="https:lalab.xyz">LA LAB</a> | &copy; 2024 All Rights Reserved</p>
+        </footer>
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Face Recognition Tool",
+              "url": "https://your-domain.com/face-recognition",
+              "description": "Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results with our advanced AI technology.",
+              "applicationCategory": "Image Processing",
+              "operatingSystem": "Any",
+              "offers": {
+                "@type": "Offer",
+                "price": "0"
+              }
+            }
+            </script>
+    </body>
+
+    </html>

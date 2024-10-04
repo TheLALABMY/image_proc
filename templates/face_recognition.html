@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Tool | LA LAB Image Processing</title>
+    <meta name="description" content="Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results with our advanced AI technology.">
+    <meta name="keywords" content="face recognition, facial detection, image processing, AI, machine learning">
+    <meta name="author" content="LA LAB">
+    <link rel="canonical" href="https://your-domain.com/face-recognition">
+    <!-- Favicon -->
+ <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+ <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/face-recognition">
+    <meta property="og:title" content="Face Recognition Tool | LA LAB Image Processing">
+    <meta property="og:description" content="Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results.">
+    <meta property="og:image" content="https://your-domain.com/path-to-your-og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://your-domain.com/face-recognition">
+    <meta property="twitter:title" content="Face Recognition Tool | LA LAB Image Processing">
+    <meta property="twitter:description" content="Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results.">
+    <meta property="twitter:image" content="https://your-domain.com/path-to-your-twitter-image.jpg">
+
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Content Styling */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            text-align: center;
+            position: relative;
+            height: 30px; /* Set a fixed height for the nav */
+            z-index: 10;  /* Ensure nav is above other content */
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav ul li a:hover {
+            color: #f9d342;
+        }
+
+        /* Burger Menu */
+        .burger {
+            display: none;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+        }
+
+        /* Mobile Navigation Menu */
+        .nav-links-mobile {
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-links-mobile li {
+            padding: 15px 0;
+        }
+
+        .nav-links-mobile.show {
+            display: flex;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #f9d342;
+            text-decoration: none;
+        }
+
+               /* Modern Download Button Styling */
+    .download-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .download-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            nav ul.nav-links {
+                display: none;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .nav-links-mobile {
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (event) {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            const burger = document.querySelector('.burger');
+
+            if (!burger.contains(event.target) && !navLinksMobile.contains(event.target)) {
+                navLinksMobile.classList.remove('show');
+            }
+        });
+
+        function closeMobileMenu() {
+            const navLinksMobile = document.querySelector('.nav-links-mobile');
+            navLinksMobile.classList.remove('show');
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="burger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+        <!-- Mobile Navigation (Hidden by default) -->
+        <ul class="nav-links-mobile">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pencil-sketch">Pencil Sketch</a></li>
+            <li><a href="/word-cloud">Word Cloud</a></li>
+            <li><a href="/image-editor">Image Editor</a></li>
+            <li><a href="/face-recognition">Face Recognition</a></li>
+            <li><a href="/pixelate">Pixelate</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <h1>Face Recognition Tool</h1>
+            
+            <p>Discover the power of AI-driven face recognition with our easy-to-use online tool. Whether you're organizing photos, enhancing security, or exploring cutting-edge technology, our face recognition tool offers quick and accurate results. Simply upload an image, and our advanced algorithms will detect and highlight faces in seconds. It's free, fast, and doesn't require any software installation – perfect for both personal and professional use. Try it now and experience the future of image analysis!</p>
+       
+           <form action="/face-recognition" method="POST" enctype="multipart/form-data">
+                <label for="image">Upload an image:</label>
+                <input type="file" name="image" required>
+                <button type="submit">Recognize Faces</button>
+            </form>
+
+            {% if face_image_url %}
+                <h2>Image with Recognized Faces:</h2>
+                <img src="{{ face_image_url }}" alt="Face Recognition" style="max-width: 300px;">
+                <a href="{{ face_image_url }}" download class="download-button">Download</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by <a href="#">LA LAB</a> | &copy; 2024 All Rights Reserved</p>
+    </footer>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Face Recognition Tool",
+          "url": "https://your-domain.com/face-recognition",
+          "description": "Use our free online face recognition tool to detect and identify faces in your images. Upload a photo and get instant results with our advanced AI technology.",
+          "applicationCategory": "Image Processing",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0"
+          }
+        }
+        </script>
+</body>
+
+</html>

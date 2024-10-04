@@ -1,0 +1,6 @@
+Flask
+Pillow
+opencv-python
+wordcloud
+matplotlib
+tensorflow
