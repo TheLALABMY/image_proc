@@ -1,6 +1,6 @@
 Flask
 Pillow
-opencv-python
+opencv-python-headless
 wordcloud
 matplotlib
-tensorflow
+tensorflow-cpu
