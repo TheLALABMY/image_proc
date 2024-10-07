@@ -3,4 +3,3 @@ Pillow
 opencv-python-headless
 wordcloud
 matplotlib
-tensorflow-cpu
