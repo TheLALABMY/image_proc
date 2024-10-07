@@ -1,0 +1,24 @@
+# Exclude .git folder
+.git
+
+# Exclude node_modules (if not needed for deployment)
+node_modules
+
+# Exclude logs and temporary files
+*.log
+*.tmp
+
+# Exclude specific files or directories
+.hiffel
+uploads/
+static/uploads/*
+*.psd
+*.ai
+
+# Exclude test files and directories
+tests/
+*.test.js
+
+# Exclude other large files
+*.zip
+*.tar.gz
